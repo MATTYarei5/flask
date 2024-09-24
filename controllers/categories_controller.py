@@ -2,7 +2,7 @@ from flask import jsonify, request
 from data import category_records
 
 
-def category_get_all():
+def categories_get_all():
     return jsonify({"categories": category_records}), 200
 
 
@@ -34,17 +34,16 @@ def category_delete(category_id):
     return jsonify({"message": "Category deleted"}), 200
 
 
-def category_update_status(category_id, status):
+def category_activity(category_id):
     for category in category_records:
         if category['category_id'] == category_id:
-            if status == 'activate':
-                category['active'] = True
-            else:
-                category['active'] = False
-            return jsonify({"message": "Category status updated", "result": category}), 200
+            category['active'] = not category["active"]
+            if category["active"]:
+                return jsonify({"message": "Category activated", "result": category}), 200
+            return jsonify({"message": "Category deactivated", "result": category}), 200
     return jsonify({"message": f'Category with id {category_id} not found.'}), 404
 
 
-def category_get_all_active():
-    active_categories = [category for category in category_records if category.get('active', False)]
-    return jsonify({"categories": active_categories}), 200
+def categories_get_all_active():
+    active_categories = [category for category in category_records if category['active']]
+    return jsonify({"active_categories": active_categories}), 200
