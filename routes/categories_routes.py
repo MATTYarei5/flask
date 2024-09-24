@@ -29,11 +29,13 @@ def category_delete(category_id):
     return categories_controller.category_delete(category_id)
 
 
-@categories.route('/categories/activate/<category_id>', methods=['PATCH'])
-def category_activate(category_id):
-    return categories_controller.category_activate(category_id)
+@categories.route('/categories/<category_id>/<status>', methods=['PATCH'])
+def category_update_status(category_id, status):
+    if status not in ['activate', 'deactivate']:
+        return "Invalid status. Must be either 'activate' or 'deactivate'.", 400
+    return categories_controller.category_update_status(category_id, status)
 
 
-@categories.route('/categories/deactivate/<category_id>', methods=['PATCH'])
-def category_deactivate(category_id):
-    return categories_controller.category_deactivate(category_id)
+@categories.route('/categories/active', methods=['GET'])
+def category_get_all_active():
+    return categories_controller.category_get_all_active()
